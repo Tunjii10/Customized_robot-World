@@ -1,0 +1,79 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="myRobot">
+
+<!-- base footprint -->
+<link name="base_footprint">
+    
+</link>
+
+<!-- base link -->
+<link name="base_link">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <cylinder radius="0.4" length="0.2"/>
+        </geometry>
+        <material name="base_link_material">
+            <color rgba="0.3 0.6 1.0 1.0"/>
+        </material>
+    </visual>
+</link>
+
+<!-- base joint -->
+<joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0.135" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+</joint>
+
+
+<!-- castor wheel -->
+<link name="castor_link">
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <sphere radius="0.0445" />
+        </geometry>
+        <material name="castor_material">
+            <color rgba="0 0 0 1"/>
+        </material>
+    </visual>
+</link>
+
+<!-- castor joint  -->
+<joint name="castor_joint" type="continuous">
+    <origin xyz="0.30 0 -0.091" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="castor_link"/>
+    <axis xyz="1.0 1.0 1.0"/>
+</joint>
+
+<!--side wheels macro -->
+<xacro:macro name="wheel" params="name y">
+    
+    <!--wheel link -->
+    <link name="wheel_${name}_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://robot-world/meshes/wheel.stl" scale="0.0034 0.0034 0.0034"/>
+            </geometry>
+            <material name="right_${name}_material">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <!-- wheel joint  -->
+    <joint name="wheel_${name}_joint" type="continuous">
+        <origin xyz="0 ${y} 0" rpy="0 0 1.57"/>
+        <parent link="base_link"/>
+        <child link="wheel_${name}_link"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+</xacro:macro>
+
+<!--wheels macro call -->
+<xacro:wheel name="right"  y="0.50"/>
+<xacro:wheel name="left"  y="-0.42"/> 
+
+</robot>
